@@ -5,7 +5,7 @@
 
 // Before Starting: 
 // Create a question/answer bank, indicating the correct answer for each question and all variables.
-var questAnsArray = [{
+var randQuest = [{
   qID: 0,
   question: "In Aladdin, what is the name of Jasmine's pet tiger?",
   choices: ["Rajah", "Bo", "Iago", "Jack"],
@@ -44,18 +44,20 @@ var state = {
   incorrectAnswers: 0,
   currentQuestion: -1,
   timeRemaining: 3,
-  count: 0,
   running: false,
 
 
 
 };
-var pastQuestArray = [],
+var pastQuestArray = [];
+var intervalId;
+var count= 0;
+
 // ??
 
 
 
-function counter() {
+function countDown() {
   state.timeRemaining--
   console.log(state.timeRemaining);
   $("#timer").html("Time remaining: " + state.timeRemaining + " seconds");
@@ -70,40 +72,34 @@ function counter() {
 function beginTimer() {
   console.log("Begin Timer");
 
-  intervalId = setInterval(counter, 1000)
+  intervalId = setInterval(countDown, 1000)
   console.log(state.timeRemaining);
-
-
-
-
 
   // Timer Starts from 15 sec
 };
 
-function nextQuestion() {
-  var randQuest = questAnsArray[Math.floor(Math.random() * questAnsArray.length)];
-  beginTimer();
-  console.log("next question fucntion called: " + randQuest.question);
-  // Make sure the questions don't repeat.
-  var i;
-  for (i = 0, i <)
+// function nextQuestion() {
+//   var randQuest = randQuest[Math.floor(Math.random() * randQuest.length)];
+//   beginTimer();
+//   console.log("next question fucntion called: " + randQuest.question);
+//   // Make sure the questions don't repeat.
 
-    $("#question").html(randQuest.question);
-  $("#choice1").html("1:" + randQuest.choices[0]);
-  $("#choice2").html("2:" + randQuest.choices[1]);
-  $("#choice3").html("3:" + randQuest.choices[2]);
-  $("#choice4").html("4:" + randQuest.choices[3]);
+  //   $("#question").html(randQuest.question);
+  // $("#choice1").html("1:" + randQuest.choices[0]);
+  // $("#choice2").html("2:" + randQuest.choices[1]);
+  // $("#choice3").html("3:" + randQuest.choices[2]);
+  // $("#choice4").html("4:" + randQuest.choices[3]);
 
-  // Display scores
-  // Display Reset game Button
+//   // Display scores
+//   // Display Reset game Button
 
-  pastQuestArray.push(randQuest.qID);
-  console.log(pastQuestArray);
-  console.log(questAnsArray);
-  // Display a random question
-  rightChoice = randQuest.choices[randQuest.validAnswer];
+//   pastQuestArray.push(randQuest.qID);
+//   console.log(pastQuestArray);
+//   console.log(randQuest);
+//   // Display a random question
+//   rightChoice = randQuest.choices[randQuest.validAnswer];
 
-}
+// }
 
 
 //Function to select the correct answer. 
@@ -111,34 +107,66 @@ function selectAns() {
   /* If the user clicks the correct choice, then display the image and alert Correct
   Else, alert incorrect and display the image and the correct answer*/
 
-  return null;
+  // If state.running is true, then run the following code
+  if (!state.running) {
+        // Not sure if we need the val()
+    value = $("input[type= 'radio']:checked").val();
+
+    if (value== undefined){
+      $("#message-section").html("Select one of the answers");
+      $("#message-section").show();
+    }
+    else{
+      $("#message-section").hide();
+
+      if (value == randQuest[count].validAnswer){
+        $("#message-section").html("Correct!");
+        $("#message-section").show();
+
+        state.correctAnswers++
+        console.log("new Correct answers:"+ state.correctAnswers);
+      }
+      else {
+        $("#message-selection").html("Incorrect!");
+        $("#message-selection").show();
+
+        state.incorrectAnswers++
+        console.log("new incorrect answers:"+ state.correctAnswers);
+      }
+      state.count++
+      console.log("new count:"+ state.count++);
+
+    }
+
+
+  }
 };
 
 function renderQuestions() {
-  // Begin timer as soon as 
+  console.log("Function renderQuestion:")
+  
   beginTimer();
+  var currentQuestion= randQuest[count];
 
-  var randQuest = questAnsArray[Math.floor(Math.random() * questAnsArray.length)];
+  $("#question").html(currentQuestion.question);
+  $("#choice1").html("<div><input type='radio' value=0>"+currentQuestion.choices[0]+ "</div>");
+  $("#choice2").html("<div><input type='radio' value=1>"+currentQuestion.choices[1]+ "</div>");
+  $("#choice3").html("<div><input type='radio' value=2>"+currentQuestion.choices[2]+ "</div>");
+  $("#choice4").html("<div><input type='radio' value=3>"+currentQuestion.choices[3]+ "</div>");
 
-  $("#question").html(randQuest.question);
-  $("#choice1").html("1:" + randQuest.choices[0]);
-  $("#choice2").html("2:" + randQuest.choices[1]);
-  $("#choice3").html("3:" + randQuest.choices[2]);
-  $("#choice4").html("4:" + randQuest.choices[3]);
+//  Increase the count every time to go to next question
 
   // Display scores
   // Display Reset game Button
 
-  pastQuestArray.push(randQuest.qID);
-  console.log(pastQuestArray);
-  console.log(questAnsArray);
+  // pastQuestArray.push(randQuest.qID);
+  console.log(randQuest);
   // Display a random question
-  rightChoice = randQuest.choices[randQuest.validAnswer];
 }
 
 
 function newGame() {
-  var state = {
+  state = {
     correctAnswers: 0,
     incorrectAnswers: 0,
     currentQuestion: -1,
@@ -147,24 +175,23 @@ function newGame() {
     count: 0,
     running: false,
   }
-  var pastQuestArray = [],
+  var pastQuestArray = []
 
   // Do stuff to initiate the game
-}
+};
 
 function init() {
   newGame(); // resets the game to the initial state
   // starttimer() // initialize the timer
   renderQuestions();
   selectAns();
-  nextQuestion();
 
 }
 
 $(document).ready(function () {
   $("#start-game").on("click", function () {
     // Removes the button and initializes function init
-    // $(this).remove();
+    $(this).hide();
     init();
   })
 
