@@ -5,18 +5,18 @@
 
 // Before Starting: 
 // Create a question/answer bank, indicating the correct answer for each question and all variables.
+
+// Add Images to display later
 var randQuest = [{
   qID: 0,
   question: "In Aladdin, what is the name of Jasmine's pet tiger?",
   choices: ["Rajah", "Bo", "Iago", "Jack"],
-  images: ["../images/Rajah.gif"],
   validAnswer: 0
 },
 {
   qID: 1,
   question: "In Peter Pan, Captain Hook had a hook on which part of his     body?",
   choices: ["Right Foot", "Left Hand", "Left Foot", "Right Hand"],
-  images: ["../images/Rajah.gif"],
 
   validAnswer: 1
 
@@ -26,7 +26,6 @@ var randQuest = [{
   qID: 2,
   question: "In the Lion King, where does Mufasa and his family live?",
   choices: ["Rocky Mountain", "Forest", "Desert", "Pride Rock"],
-  images: ["../images/Rajah.gif"],
   validAnswer: 3
 
 },
@@ -44,7 +43,7 @@ var state = {
   incorrectAnswers: 0,
   currentQuestion: -1,
   timeRemaining: 3,
-  running: false,
+  notRunning: true,
 
 
 
@@ -78,75 +77,19 @@ function beginTimer() {
   // Timer Starts from 15 sec
 };
 
-// function nextQuestion() {
-//   var randQuest = randQuest[Math.floor(Math.random() * randQuest.length)];
-//   beginTimer();
-//   console.log("next question fucntion called: " + randQuest.question);
-//   // Make sure the questions don't repeat.
+function showFinalScore(){
 
-  //   $("#question").html(randQuest.question);
-  // $("#choice1").html("1:" + randQuest.choices[0]);
-  // $("#choice2").html("2:" + randQuest.choices[1]);
-  // $("#choice3").html("3:" + randQuest.choices[2]);
-  // $("#choice4").html("4:" + randQuest.choices[3]);
-
-//   // Display scores
-//   // Display Reset game Button
-
-//   pastQuestArray.push(randQuest.qID);
-//   console.log(pastQuestArray);
-//   console.log(randQuest);
-//   // Display a random question
-//   rightChoice = randQuest.choices[randQuest.validAnswer];
-
-// }
+};
 
 
 //Function to select the correct answer. 
-function selectAns() {
-  /* If the user clicks the correct choice, then display the image and alert Correct
-  Else, alert incorrect and display the image and the correct answer*/
-
-  // If state.running is true, then run the following code
-  if (!state.running) {
-        // Not sure if we need the val()
-    value = $("input[type= 'radio']:checked").val();
-
-    if (value== undefined){
-      $("#message-section").html("Select one of the answers");
-      $("#message-section").show();
-    }
-    else{
-      $("#message-section").hide();
-
-      if (value == randQuest[count].validAnswer){
-        $("#message-section").html("Correct!");
-        $("#message-section").show();
-
-        state.correctAnswers++
-        console.log("new Correct answers:"+ state.correctAnswers);
-      }
-      else {
-        $("#message-selection").html("Incorrect!");
-        $("#message-selection").show();
-
-        state.incorrectAnswers++
-        console.log("new incorrect answers:"+ state.correctAnswers);
-      }
-      state.count++
-      console.log("new count:"+ state.count++);
-
-    }
-
-
-  }
-};
 
 function renderQuestions() {
   console.log("Function renderQuestion:")
   
-  beginTimer();
+  // beginTimer();
   var currentQuestion= randQuest[count];
+  console.log(currentQuestion);
 
   $("#question").html(currentQuestion.question);
   $("#choice1").html("<div><input type='radio' value=0>"+currentQuestion.choices[0]+ "</div>");
@@ -154,14 +97,72 @@ function renderQuestions() {
   $("#choice3").html("<div><input type='radio' value=2>"+currentQuestion.choices[2]+ "</div>");
   $("#choice4").html("<div><input type='radio' value=3>"+currentQuestion.choices[3]+ "</div>");
 
-//  Increase the count every time to go to next question
 
-  // Display scores
-  // Display Reset game Button
+  $("input").on("click", 
+  function selectAns() {
+    /* If the user clicks the correct choice, then display the image and alert Correct
+    Else, alert incorrect and display the image and the correct answer*/
+  
+    // If state.notRunning is true, then run the following code
+    if (!state.notRunning) {
+          // Not sure if we need the val()
+      value = $("input[type= 'radio']:checked").val();
+  
+      // if (value== undefined){
+      //   $("#message-section").html("Select one of the answers");
+      //   $("#message-section").show();
+      // }
+      // else{
+      //   $("#message-section").hide();
+  
+        if (value === randQuest[count].validAnswer){
+          $("#message-section").html("Correct!");
+          $("#message-section").show();
+          $("#image-section").html()
+  
+          state.correctAnswers++
+          console.log("new Correct answers:"+ state.correctAnswers);
+        }
+        
+        if (value !== randQuest[count].validAnswer){
+          $("#message-selection").html("Incorrect!");
+          $("#message-selection").show();
+  
+          state.incorrectAnswers++
+          console.log("new incorrect answers:"+ state.incorrectAnswers);
+        }
+        state.count++
+        console.log("new count:"+ state.count++);
+  
+        if (state.count===randQuest.length){
+  
+          // If 
+          state.notRunning= true;
+          showFinalScore();
+  
+        }
+  
+        else {
+          renderQuestions();
+  
+        }
+  
+        // outside of the else first else statement
+  
+        // Finished selecting the first questions/answer.
+  
+        // Deciding whether to display the score or go to the next question.
+  
+  
+      }
+  
+  
+    }
+  )
+  // };
+  
 
-  // pastQuestArray.push(randQuest.qID);
-  console.log(randQuest);
-  // Display a random question
+  
 }
 
 
@@ -171,9 +172,10 @@ function newGame() {
     incorrectAnswers: 0,
     currentQuestion: -1,
     timeRemaining: 3,
-    // May or may not need Count or running
+    // May or may not need Count or notRunning
+
     count: 0,
-    running: false,
+    notRunning: false,
   }
   var pastQuestArray = []
 
@@ -184,14 +186,13 @@ function init() {
   newGame(); // resets the game to the initial state
   // starttimer() // initialize the timer
   renderQuestions();
-  selectAns();
 
 }
 
 $(document).ready(function () {
   $("#start-game").on("click", function () {
     // Removes the button and initializes function init
-    $(this).hide();
+    // $(this).hide();
     init();
   })
 
