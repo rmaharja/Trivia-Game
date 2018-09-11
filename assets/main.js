@@ -85,85 +85,82 @@ function showFinalScore(){
 //Function to select the correct answer. 
 
 function renderQuestions() {
-  console.log("Function renderQuestion:")
+  console.log("top of Function renderQuestion:")
   
   // beginTimer();
   var currentQuestion= randQuest[count];
   console.log(currentQuestion);
 
+  // Add on click function to the html input tags?...Does not seem very efficient.
   $("#question").html(currentQuestion.question);
-  $("#choice1").html("<div><input type='radio' value=0>"+currentQuestion.choices[0]+ "</div>");
-  $("#choice2").html("<div><input type='radio' value=1>"+currentQuestion.choices[1]+ "</div>");
-  $("#choice3").html("<div><input type='radio' value=2>"+currentQuestion.choices[2]+ "</div>");
-  $("#choice4").html("<div><input type='radio' value=3>"+currentQuestion.choices[3]+ "</div>");
+  $("#choice1").html("<div><input class='radio' type='radio' value=0>"+currentQuestion.choices[0]+ "</div>");
+  $("#choice2").html("<div><input class='radio' type='radio' value=1>"+currentQuestion.choices[1]+ "</div>");
+  $("#choice3").html("<div><input class='radio' type='radio' value=2>"+currentQuestion.choices[2]+ "</div>");
+  $("#choice4").html("<div><input class='radio' type='radio' value=3>"+currentQuestion.choices[3]+ "</div>");
 
+  selectAns();
 
-  $("input").on("click", 
-  function selectAns() {
-    /* If the user clicks the correct choice, then display the image and alert Correct
-    Else, alert incorrect and display the image and the correct answer*/
-  
-    // If state.notRunning is true, then run the following code
-    if (!state.notRunning) {
-          // Not sure if we need the val()
-      value = $("input[type= 'radio']:checked").val();
-  
-      // if (value== undefined){
-      //   $("#message-section").html("Select one of the answers");
-      //   $("#message-section").show();
-      // }
-      // else{
-      //   $("#message-section").hide();
-  
-        if (value === randQuest[count].validAnswer){
-          $("#message-section").html("Correct!");
-          $("#message-section").show();
-          $("#image-section").html()
-  
-          state.correctAnswers++
-          console.log("new Correct answers:"+ state.correctAnswers);
-        }
-        
-        if (value !== randQuest[count].validAnswer){
-          $("#message-selection").html("Incorrect!");
-          $("#message-selection").show();
-  
-          state.incorrectAnswers++
-          console.log("new incorrect answers:"+ state.incorrectAnswers);
-        }
-        state.count++
-        console.log("new count:"+ state.count++);
-  
-        if (state.count===randQuest.length){
-  
-          // If 
-          state.notRunning= true;
-          showFinalScore();
-  
-        }
-  
-        else {
-          renderQuestions();
-  
-        }
-  
-        // outside of the else first else statement
-  
-        // Finished selecting the first questions/answer.
-  
-        // Deciding whether to display the score or go to the next question.
-  
-  
-      }
-  
-  
-    }
-  )
-  // };
   
 
   
 }
+// Moved in here bc it wouldn't work outside it.
+function selectAns() {
+  /* If the user clicks the correct choice, then display the image and alert Correct
+  Else, alert incorrect and display the image and the correct answer*/
+
+  // If state.notRunning is true, then run the following code
+  if (!state.notRunning) {
+        // Not sure if we need the val()
+    value = $("input[class='radio']:checked").val();
+  
+    // if (value== undefined){
+    //   $("#message-section").html("Select one of the answers");
+    //   $("#message-section").show();
+    // }
+    // else{
+    //   $("#message-section").hide();
+
+      if ($('.value') === randQuest[count].validAnswer){
+        $("#message-section").html("Correct!");
+        $("#message-section").show();
+
+        state.correctAnswers++
+        console.log("new Correct answers:"+ state.correctAnswers);
+      }
+
+      if (value !== randQuest[count].validAnswer){
+        $("#message-selection").html("Incorrect!");
+        $("#message-selection").show();
+
+        state.incorrectAnswers++
+        console.log("new incorrect answers:"+ state.incorrectAnswers);
+      }
+      state.count++
+      console.log("new count:"+ state.count++);
+
+      if (state.count===randQuest.length){
+
+        // If 
+        state.notRunning= true;
+        showFinalScore();
+
+      }
+
+      else {
+        renderQuestions();
+
+      }
+
+      // outside of the else first else statement
+
+      // Finished selecting the first questions/answer.
+
+      // Deciding whether to display the score or go to the next question.
+    }
+  }
+
+// };
 
 
 function newGame() {
